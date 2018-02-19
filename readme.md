@@ -1,6 +1,6 @@
-Sample repository showing a problem with JPA and SSE.
+## Sample repository showing a problem with JPA and SSE.
 
-h3. How To
+### How To
 
 1. Launch the app
 
@@ -19,3 +19,5 @@ The main problem seems to be `org.springframework.orm.jpa.support.OpenEntityMana
 JDBC connection open until the SSE socket throws an exception. If we dont try to send any SSEs for a long time
 then the connection pool will run out of connections before the first SSE emitter throws an exception and only then gets 
 cleaned up.
+
+This repository serves as an example for https://github.com/spring-projects/spring-boot/issues/12110.
