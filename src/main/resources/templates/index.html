@@ -1,0 +1,45 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+>
+<body>
+<h3>SSE Demo</h3>
+<div id="content">content</div>
+<p>Current Logs
+    <span th:text="${count}">100</span>
+</p>
+<form method="post" action="/add">
+    <input type="submit" title="Add Log Entry">Add Log</input>
+</form>
+<script type="application/javascript">
+    (function () {
+        registerSSE();
+    })();
+
+    function registerSSE() {
+        if ("EventSource" in window) {
+            var protocol = (window.location.protocol == "https:") ? "https" : "http";
+            var url = protocol + '://' + window.location.host + '/sse/client';
+            const ws = new EventSource(url);
+            window.ws = ws;
+
+            window.addEventListener("beforeunload", function () {
+                console.info("beforeUnload, closing SSE");
+                ws.close();
+            });
+
+            ws.onopen = function (evt) {
+                console.info("opened");
+            };
+            ws.onerror = function (evt) {
+                console.debug(new Date(), "SSE error", evt);
+                // note that SSE will automatically reconnect, no need to refresh the page
+            };
+            ws.onmessage = function (evt) {
+                console.debug("received message", evt);
+                document.getElementById("content").innerHTML = "MESSAGE: " + JSON.stringify(evt.data);
+            };
+        }
+    }
+</script>
+</body>
+</html>
